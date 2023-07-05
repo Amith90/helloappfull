@@ -1,0 +1,24 @@
+{
+    "executionRoleArn": "arn:aws:iam::598880949918:role/nwn-ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "helloapp",
+            "image": "598880949918.dkr.ecr.us-east-2.amazonaws.com/helloapp",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "containerPort": 80
+                }
+            ]
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "256",
+    "memory": "512",
+    "family": "helloapp-defenition"
+}

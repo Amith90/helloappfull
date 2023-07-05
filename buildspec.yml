@@ -1,0 +1,36 @@
+version: 0.2
+
+
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 598880949918.dkr.ecr.us-east-2.amazonaws.com
+      - REPOSITORY_URI=598880949918.dkr.ecr.us-east-2.amazonaws.com/helloapp
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - make ENV=UAT build-container
+      - docker tag helloapp:latest $REPOSITORY_URI:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - echo Pushing the Docker images...
+      - docker images
+      - docker push $REPOSITORY_URI:latest
+      - printf '[{"name":"helloapp","imageUri":"%s"}]'    $REPOSITORY_URI:latest > imagedefinitions.json
+      - ls -ltr
+artifacts:
+    base-directory: $CODEBUILD_SRC_DIR
+    files: 
+      - imagedefinitions.json
+      - appspec.yaml
+      - taskdef.json
+      - buildspec.yml
+
+
+
+
+   
